@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { 
@@ -23,6 +23,25 @@ interface LogLine {
 }
 
 export default function WorkspacePage() {
+  return (
+    <Suspense fallback={<WorkspaceLoading />}>
+      <WorkspacePageContent />
+    </Suspense>
+  );
+}
+
+function WorkspaceLoading() {
+  return (
+    <div className="h-screen bg-background text-foreground flex items-center justify-center">
+      <div className="flex items-center gap-2 text-sm text-slate-400">
+        <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
+        Loading workspace...
+      </div>
+    </div>
+  );
+}
+
+function WorkspacePageContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const id = params.id as string;
