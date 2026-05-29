@@ -4,6 +4,8 @@ Auto IDE is an autonomous cloud IDE for generating and managing software project
 
 Deployed frontend: https://auto-ide.vercel.app/
 
+Backend API: https://auto-ide.onrender.com
+
 ## Features
 
 - Prompt-driven project creation and iteration
@@ -59,6 +61,7 @@ The API will run at `http://localhost:8000`.
 
 ```bash
 cd frontend
+cp .env.example .env.local
 npm install
 npm run dev
 ```
@@ -93,6 +96,12 @@ FRONTEND_URL=http://localhost:3000
 BACKEND_URL=http://localhost:8000
 ```
 
+Create `frontend/.env.local` from `frontend/.env.example` and set the backend API URL:
+
+```env
+NEXT_PUBLIC_API_URL=https://auto-ide.onrender.com
+```
+
 ## Useful Commands
 
 ```bash
@@ -110,4 +119,4 @@ docker compose up --build
 
 ## Deployment
 
-The frontend is deployed on Vercel at https://auto-ide.vercel.app/. Configure the production backend URL and any required API environment variables in the deployment platform before connecting the live frontend to a backend service.
+The frontend is deployed on Vercel at https://auto-ide.vercel.app/ and is configured to use the Render backend at https://auto-ide.onrender.com. In Vercel, set `NEXT_PUBLIC_API_URL` to the backend URL if you need to point the frontend at a different API.

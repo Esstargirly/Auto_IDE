@@ -7,6 +7,7 @@ import {
   Play, Folder, File, Terminal, CheckCircle2, AlertTriangle, 
   Loader2, ArrowLeft, Github, Globe, RefreshCw, Send, ChevronRight, Eye 
 } from "lucide-react";
+import { API_BASE_URL, WS_BASE_URL, authHeaders } from "../../api";
 
 interface Step {
   step_number: number;
@@ -76,7 +77,10 @@ export default function WorkspacePage() {
   // 1. Production API fetch
   const fetchProjectDetails = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/projects/${id}`);
+      const token = localStorage.getItem("auto_ide_token") || "";
+      const res = await fetch(`${API_BASE_URL}/projects/${id}`, {
+        headers: authHeaders(token)
+      });
       if (res.ok) {
         const data = await res.json();
         setName(data.name);
@@ -93,7 +97,10 @@ export default function WorkspacePage() {
 
   const fetchFilesList = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/projects/${id}/files`);
+      const token = localStorage.getItem("auto_ide_token") || "";
+      const res = await fetch(`${API_BASE_URL}/projects/${id}/files`, {
+        headers: authHeaders(token)
+      });
       if (res.ok) {
         const data = await res.json();
         setFiles(data.files || []);
@@ -106,7 +113,10 @@ export default function WorkspacePage() {
   const fetchSingleFileContent = async (path: string) => {
     setLoadingFile(true);
     try {
-      const res = await fetch(`http://localhost:8000/projects/${id}/file?path=${encodeURIComponent(path)}`);
+      const token = localStorage.getItem("auto_ide_token") || "";
+      const res = await fetch(`${API_BASE_URL}/projects/${id}/file?path=${encodeURIComponent(path)}`, {
+        headers: authHeaders(token)
+      });
       if (res.ok) {
         const data = await res.json();
         setFileContent(data.content || "");
@@ -121,7 +131,7 @@ export default function WorkspacePage() {
 
   // 2. High performance WebSockets logs connector
   const connectWebSocket = () => {
-    const ws = new WebSocket(`ws://localhost:8000/projects/${id}/logs`);
+    const ws = new WebSocket(`${WS_BASE_URL}/projects/${id}/logs`);
     
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);
@@ -233,7 +243,7 @@ export default function WorkspacePage() {
         // Finalize
         if (item.done) {
           setStatus("SUCCESS");
-          setDeployUrl("http://localhost:8000/preview/" + id);
+          setDeployUrl(`${API_BASE_URL}/preview/${id}`);
           setRepoUrl("https://github.com/developer/" + name.toLowerCase().replace(" ", "-"));
         }
       }, item.delay);

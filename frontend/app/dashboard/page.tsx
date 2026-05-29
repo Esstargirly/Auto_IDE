@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Terminal, CreditCard, ChevronRight, Plus, Loader2, LogOut, Code, Smartphone, Database, Globe, Sliders } from "lucide-react";
+import { API_BASE_URL } from "../api";
 
 interface ProjectItem {
   id: string;
@@ -59,7 +60,7 @@ export default function DashboardPage() {
 
   const fetchUserData = async (jwtToken: string) => {
     try {
-      const res = await fetch("http://localhost:8000/auth/me", {
+      const res = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: { "Authorization": `Bearer ${jwtToken}` }
       });
       if (res.ok) {
@@ -74,7 +75,7 @@ export default function DashboardPage() {
 
   const fetchProjects = async (jwtToken: string) => {
     try {
-      const res = await fetch("http://localhost:8000/projects", {
+      const res = await fetch(`${API_BASE_URL}/projects`, {
         headers: { "Authorization": `Bearer ${jwtToken}` }
       });
       if (res.ok) {
@@ -105,7 +106,7 @@ export default function DashboardPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/projects", {
+      const res = await fetch(`${API_BASE_URL}/projects`, {
         method: "POST",
         headers,
         body: JSON.stringify(payload)
