@@ -1,0 +1,26 @@
+FROM node:20-alpine
+
+RUN apk update && apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    bash \
+    curl
+
+# Create a developer user and group
+RUN addgroup -S developer && adduser -S developer -G developer
+
+# Configure working directory
+WORKDIR /workspace
+RUN chown developer:developer /workspace
+
+# Run as non-root user for security isolation
+USER developer
+
+# Set environment variables
+ENV PORT=3000
+ENV NODE_ENV=development
+
+# Keep container running indefinitely
+CMD ["sleep", "infinity"]
